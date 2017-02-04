@@ -5,7 +5,7 @@ RUN apt-get update && apt-get install -y \
     git \
     cron \
     mysql-client \
-    mongodb-org-tools
+    mongodb-clients
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
