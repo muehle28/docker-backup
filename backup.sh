@@ -11,7 +11,7 @@ case "${TYPE}" in
     ###################################
     "mysql")
 	: ${PORT:=3306}
-	mysqldump  --user${USER} --password${PASSWD} --host ${HOST} --port ${PORT} --databases ${DATABASES} > ${BACKUP_DIR}/${TYPE}.backup.sql
+	mysqldump  --user ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --databases ${DATABASES} > ${BACKUP_DIR}/${TYPE}.backup.sql
 	;;
 
 	###################################
