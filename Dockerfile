@@ -15,5 +15,5 @@ RUN chmod +x /backup.sh
 
 WORKDIR /
 VOLUME ["/backups"]
-ENTRYPOINT ["entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
 CMD ["cron", "-f"]
