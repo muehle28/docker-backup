@@ -11,7 +11,7 @@ case "${TYPE}" in
     ###################################
     "mysql")
 	: ${PORT:=3306}
-	mysqldump  --user${USER} --password${PASSWD} --host ${HOST} --port ${PORT} --databases ${DATABASES} > ${BACKUP_DIR}/database.sql
+	mysqldump  --user${USER} --password${PASSWD} --host ${HOST} --port ${PORT} --databases ${DATABASES} > ${BACKUP_DIR}/${TYPE}.backup.sql
 	;;
 
 	###################################
@@ -19,7 +19,7 @@ case "${TYPE}" in
     ###################################
 	"mongodb")
 	: ${PORT:=37017}
-	mongodump --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --out ${BACKUP_DIR}/database
+	mongodump --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --out ${BACKUP_DIR}/${TYPE}.backup
 	;;
 
 esac
