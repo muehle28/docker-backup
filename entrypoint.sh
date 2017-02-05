@@ -13,7 +13,7 @@ printenv | sed 's/^\(.*\)$/export \1/g' > /root/backup_env.sh
 chmod +x /root/backup_env.sh
 
 mkdir -p -- "${BACKUP_DIR}"
-if [ -z "$WEBDAV_URL" ] then;
+if [ -n "${WEBDAV_URL}" ]; then
 	echo "Mounting WebDAV: ${WEBDAV_URL}"
 	echo "${WEBDAV_URL} ${WEBDAV_USER} ${WEBDAV_PASSWD}">/etc/davfs2/secrets
 	mount -t davfs ${WEBDAV_URL} /backup_ext
