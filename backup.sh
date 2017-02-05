@@ -28,7 +28,7 @@ esac
 
 if [ -n "${FTP_URL}" ]; then
 	echo "Send file to ftp server: ${FTP_URL}"
-	lftp -u ${FTP_USER},${FTP_PASS} -p 22 sftp://${FTP_HOST} <<EOF
+	lftp -u ${FTP_USER},${FTP_PASS} -p 22 ${FTP_HOST} <<EOF
 cd ${BACKUP_DIR}"
 put ${BACKUP_DIR}/${FILENAME}
 bye
