@@ -2,6 +2,7 @@ FROM debian:jessie
 MAINTAINER michael@websr.eu
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    rsyslog \
     git \
     cron \
     mysql-client \
@@ -18,4 +19,4 @@ RUN echo "Europe/Berlin" > /etc/timezone && dpkg-reconfigure --frontend noninter
 WORKDIR /
 VOLUME ["/backups"]
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["cron", "-f"]
+CMD ["cron", "-f", "-L15"]
