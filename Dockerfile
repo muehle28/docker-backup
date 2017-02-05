@@ -1,7 +1,7 @@
 FROM debian:jessie
 MAINTAINER michael@websr.eu
 
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
     git \
     cron \
     mysql-client \
@@ -13,7 +13,7 @@ RUN chmod +x /entrypoint.sh
 ADD backup.sh /backup.sh
 RUN chmod +x /backup.sh
 
-RUN touch /var/log/cron.log
+RUN echo "Europe/Berlin" > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
 WORKDIR /
 VOLUME ["/backups"]
