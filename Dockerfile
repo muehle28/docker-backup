@@ -13,6 +13,8 @@ RUN chmod +x /entrypoint.sh
 ADD backup.sh /backup.sh
 RUN chmod +x /backup.sh
 
+RUN touch /var/log/cron.log
+
 WORKDIR /
 VOLUME ["/backups"]
 ENTRYPOINT ["/entrypoint.sh"]

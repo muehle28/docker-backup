@@ -4,6 +4,10 @@ BACKUP_DIR=/backups
 
 mkdir -p -- "${BACKUP_DIR}"
 
+timestamp() {
+  date +"%s"
+}
+
 case "${TYPE}" in
     
     ###################################
@@ -11,7 +15,7 @@ case "${TYPE}" in
     ###################################
     "mysql")
 	: ${PORT:=3306}
-	mysqldump  --user ${USER} --password=${PASSWD} --host ${HOST} --port ${PORT} --databases ${DATABASES} --single-transaction --routines --triggers > ${BACKUP_DIR}/${TYPE}.backup.sql
+	mysqldump  --user ${USER} --password=${PASSWD} --host ${HOST} --port ${PORT} --databases ${DATABASES} --single-transaction --routines --triggers > ${BACKUP_DIR}/${TYPE}.`timestamp`.sql
 	;;
 
 	###################################
@@ -19,7 +23,7 @@ case "${TYPE}" in
     ###################################
 	"mongodb")
 	: ${PORT:=37017}
-	mongodump --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --out ${BACKUP_DIR}/${TYPE}.backup
+	mongodump --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --out ${BACKUP_DIR}/${TYPE}.`timestamp`
 	;;
 
 esac

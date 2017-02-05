@@ -1,11 +1,13 @@
 #!/bin/bash
 set -e
 
-cat << EOF >> /etc/cron.d/soop-cron
+cat << EOF >> /etc/cron.d/backupjob
 ${CRON} root /backup.sh
 
 EOF
 
-echo "Starting crontab..."
+chmod 0644 /etc/cron.d/backupjob
+
+echo "Starting cron..."
 
 exec "$@"
