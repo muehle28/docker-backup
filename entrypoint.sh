@@ -12,4 +12,5 @@ chmod 0644 /etc/cron.d/backupjob
 
 echo "Starting cron..."
 
+rsyslogd
 exec "$@"
