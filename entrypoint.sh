@@ -1,6 +1,7 @@
 #!/bin/bash
 set -e
 
+mkdir ${HOME}/.ssh
 cat << EOF >> ${HOME}/.ssh/config
 Host *
     StrictHostKeyChecking no
