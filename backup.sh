@@ -8,6 +8,7 @@ timestamp() {
   date +"%s"
 }
 
+echo "Staring ${TYPE} backup..."
 case "${TYPE}" in
     
     ###################################
@@ -27,3 +28,4 @@ case "${TYPE}" in
 	;;
 
 esac
+echo "Backup ${TYPE} completed..."
