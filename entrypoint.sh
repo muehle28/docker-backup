@@ -1,5 +1,10 @@
 #!/bin/bash
 set -e
+
+cat << EOF >> ${HOME}/.ssh/config
+Host *
+    StrictHostKeyChecking no
+
 BACKUP_DIR=/backups
 
 cat << EOF >> /etc/cron.d/backup

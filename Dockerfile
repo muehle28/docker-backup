@@ -3,6 +3,7 @@ MAINTAINER michael@websr.eu
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -yqq --no-install-recommends \
+	openssh-client \
 	ca-certificates \
 	lftp \
     davfs2 \
