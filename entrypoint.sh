@@ -8,6 +8,8 @@ EOF
 
 chmod 0644 /etc/cron.d/backupjob
 
+crontab /etc/cron.d/backupjob
+
 echo "Starting cron..."
 
 exec "$@"
