@@ -2,7 +2,7 @@
 set -e
 
 cat << EOF >> /etc/cron.d/backup
-${CRON} root . /root/backup_env.sh; /backup.sh > /var/log/backup
+${CRON//\"/} root . /root/backup_env.sh; /backup.sh > /var/log/backup
 
 EOF
 
