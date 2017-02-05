@@ -16,7 +16,7 @@ mkdir -p -- "${BACKUP_DIR}"
 if [ -n "${WEBDAV_URL}" ]; then
 	echo "Mounting WebDAV: ${WEBDAV_URL}"
 	echo "${WEBDAV_URL} ${WEBDAV_USER} ${WEBDAV_PASSWD}">/etc/davfs2/secrets
-	mount -t davfs ${WEBDAV_URL} /backup_ext
+	mount -t davfs ${WEBDAV_URL} ${BACKUP_DIR}
 fi
 
 echo "Starting cron..."
