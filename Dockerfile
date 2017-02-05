@@ -4,6 +4,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 RUN apt-get update && apt-get install -yqq --no-install-recommends \
 	ca-certificates \
+	sftp \
     davfs2 \
     rsyslog \
     git \
