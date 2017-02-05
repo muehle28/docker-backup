@@ -2,6 +2,7 @@ FROM debian:jessie
 MAINTAINER michael@websr.eu
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+    davfs2 \
     rsyslog \
     git \
     cron \
@@ -17,6 +18,5 @@ RUN chmod +x /backup.sh
 RUN echo "Europe/Berlin" > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata
 
 WORKDIR /
-VOLUME ["/backups"]
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["cron", "-f", "-L15"]
