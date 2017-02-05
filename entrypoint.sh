@@ -4,6 +4,7 @@ set -e
 cat << EOF >> ${HOME}/.ssh/config
 Host *
     StrictHostKeyChecking no
+EOF
 
 BACKUP_DIR=/backups
 
