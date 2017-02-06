@@ -1,12 +1,32 @@
 #!/bin/bash
-
-BACKUP_DIR=/backups/${TYPE}
+: ${REMOTE_DIR:=backup}
+: ${REMOTE_GENERATIONS:=30}
+BACKUP_DIR=/backups/${REMOTE_DIR}/${TYPE}
 BACKUP_FILENAME=`date +"%s"`
 
 mkdir -p -- "${BACKUP_DIR}"
 
 function getLatestBackupFilename(){
 	ls ${BACKUP_DIR} | sed 's/\([0-9]\+\).*/\1/g' | sort -n | tail -1
+}
+
+function getOldestBackupFilename(){
+	ls ${BACKUP_DIR} | sed 's/\([0-9]\+\).*/\1/g' | sort -n -r | tail -1
+}
+
+function checkGenerations(){
+	echo "Checking for generations"
+	((count=`ls -l ${BACKUP_DIR} | grep -v ^d | wc -l` - 1))
+	if [ $count -gt ${REMOTE_GENERATIONS} ]; then
+		filename=`getOldestBackupFilename`
+		
+		if [ ! -f ${BACKUP_DIR}/${filename} ]; then
+	    	echo "Backupfile not found: ${BACKUP_DIR}/${filename}"
+	    	exit 1
+		fi
+		rm ${BACKUP_DIR}/${filename}
+		checkGenerations
+	fi
 }
 
 if [ $# -eq 0 ]; then
@@ -32,6 +52,7 @@ if [ $# -eq 0 ]; then
 
 	esac
 	echo "Backup ${TYPE} completed..."
+	checkGenerations
 
 else
 	if [ ! $1 = "restore" ]; then

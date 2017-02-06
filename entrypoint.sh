@@ -59,8 +59,10 @@ case "${TYPE}" in
 	tables=`mysql --user ${USER} --password=${PASSWD} --host ${HOST} --port ${PORT} -se "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = \"${DATABASE}\";"`
 	echo "Tables found: $tables"
 	if [ $tables -eq 0 ]; then
-		echo "${TYPE} Database is empty. Restore last backup."
+		echo "${TYPE} Database is empty. Restoring latest backup."
+		set +e
 		/backup.sh restore latest
+		set -e
 	fi
 	;;
 
