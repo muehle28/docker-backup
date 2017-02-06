@@ -5,13 +5,13 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get update && apt-get install -yqq --no-install-recommends \
 	openssh-client \
 	ca-certificates \
-	lftp \
+	sshfs \
     davfs2 \
-    rsyslog \
-    git \
     cron \
     mysql-client \
     mongodb-clients
+
+RUN touch /init
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
