@@ -1,13 +1,17 @@
 #!/bin/bash
 set -e
 
-mkdir -p -- ${HOME}/.ssh
+DATA_BACKUP_DIR=/databackup
+BACKUP_DIR=/backups
+
+mkdir -p ${BACKUP_DIR}
+mkdir -p ${DATA_BACKUP_DIR}
+
+mkdir -p ${HOME}/.ssh
 cat << EOF > ${HOME}/.ssh/config
 Host *
     StrictHostKeyChecking no
 EOF
-
-BACKUP_DIR=/backups
 
 cat << EOF > /etc/cron.d/backup
 ${CRON//\"/} root . /root/backup_env.sh; /backup.sh > /var/log/backup
@@ -19,8 +23,6 @@ chmod 0644 /etc/cron.d/backup
 printenv | sed 's/^\(.*\)$/export \1/g' > /root/backup_env.sh
 chmod +x /root/backup_env.sh
 
-mkdir -p -- "${BACKUP_DIR}"
-
 #Mount remote filesystem
 case "${REMOTE_TYPE}" in
 	###################################
@@ -29,7 +31,7 @@ case "${REMOTE_TYPE}" in
 	"webdav")
 	echo "Mounting WebDAV: ${REMOTE_HOST}"
 	echo "${REMOTE_HOST} ${REMOTE_USER} ${REMOTE_PASSWD}">/etc/davfs2/secrets
-	mount -t davfs ${REMOTE_HOST} ${BACKUP_DIR}
+	mount -t davfs https://${REMOTE_HOST} ${BACKUP_DIR}
 	;;
 
 	###################################
@@ -72,6 +74,19 @@ case "${TYPE}" in
 	"mongodb")
 	echo "Init ${TYPE} database ..."
 	: ${PORT:=37017}
+	;;
+
+	###################################
+    ## Data
+    ###################################
+	"data")
+	echo "Init ${TYPE} directory ..."
+	if [ ! "$(ls -A /databackup)" ]; then
+		echo "${TYPE} directory is empty. Restoring latest backup."
+		set +e
+		/backup.sh restore latest
+		set -e
+	fi
 	;;
 
 esac

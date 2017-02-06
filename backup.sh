@@ -3,8 +3,10 @@
 : ${REMOTE_GENERATIONS:=30}
 BACKUP_DIR=/backups/${REMOTE_DIR}/${TYPE}
 BACKUP_FILENAME=`date +"%s"`
+DATA_BACKUP_DIR=/databackup
 
-mkdir -p -- "${BACKUP_DIR}"
+mkdir -p ${BACKUP_DIR}
+mkdir -p ${DATA_BACKUP_DIR}
 
 function getLatestBackupFilename(){
 	ls ${BACKUP_DIR} | sed 's/\([0-9]\+\).*/\1/g' | sort -n | tail -1
@@ -50,6 +52,13 @@ if [ $# -eq 0 ]; then
 		mongodump --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --out ${BACKUP_DIR}/${BACKUP_FILENAME}
 		;;
 
+		###################################
+	    ## Data
+	    ###################################
+		"data")
+		tar -zcf ${BACKUP_DIR}/${BACKUP_FILENAME} -C ${DATA_BACKUP_DIR} .
+		;;
+
 	esac
 	echo "Backup ${TYPE} completed..."
 	checkGenerations
@@ -86,6 +95,14 @@ else
 		"mongodb")
 		: ${PORT:=37017}
 		mongorestore --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} ${BACKUP_DIR}/${RESTORE_FILENAME}
+		;;
+
+		###################################
+	    ## Data
+	    ###################################
+		"data")
+		rm -rf /databackup/*
+		tar -zxf ${BACKUP_DIR}/${RESTORE_FILENAME} -C ${DATA_BACKUP_DIR}
 		;;
 
 	esac

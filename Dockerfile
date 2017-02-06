@@ -11,6 +11,8 @@ RUN apt-get update && apt-get install -yqq --no-install-recommends \
     mysql-client \
     mongodb-clients
 
+RUN mkdir /databackup
+
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
