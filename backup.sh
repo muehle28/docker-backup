@@ -3,6 +3,7 @@
 : ${REMOTE_GENERATIONS:=30}
 BACKUP_DIR=/backups/${REMOTE_DIR}/${TYPE}
 BACKUP_FILENAME=`date +"%s"`
+#ATTENTION!! If you restore the content of this folder will be replaced.  
 DATA_BACKUP_DIR=/databackup
 
 mkdir -p ${BACKUP_DIR}
@@ -101,7 +102,7 @@ else
 	    ## Data
 	    ###################################
 		"data")
-		rm -rf /databackup/*
+		cd ${DATA_BACKUP_DIR} && rm -rf ..?* .[!.]* *
 		tar -zxf ${BACKUP_DIR}/${RESTORE_FILENAME} -C ${DATA_BACKUP_DIR}
 		;;
 
