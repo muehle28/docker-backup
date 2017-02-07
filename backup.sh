@@ -3,7 +3,7 @@
 : ${REMOTE_GENERATIONS:=30}
 BACKUP_DIR=/backups/${REMOTE_DIR}/${TYPE}
 BACKUP_FILENAME=`date +"%s"`
-#ATTENTION!! If you restore the content of this folder will be replaced.  
+#ATTENTION!! If you do a restore the content of this folder will be replaced.  
 DATA_BACKUP_DIR=/databackup
 
 mkdir -p ${BACKUP_DIR}
@@ -49,8 +49,8 @@ if [ $# -eq 0 ]; then
 	    ## MongoDB
 	    ###################################
 		"mongodb")
-		: ${PORT:=37017}
-		mongodump --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --out ${BACKUP_DIR}/${BACKUP_FILENAME}
+		: ${PORT:=27017}
+		mongodump --username=${USER} --password=${PASSWD} --host=${HOST} --port=${PORT} --db=${DATABASE} --archive=${BACKUP_DIR}/${BACKUP_FILENAME} --gzip
 		;;
 
 		###################################
@@ -94,8 +94,8 @@ else
 	    ## MongoDB
 	    ###################################
 		"mongodb")
-		: ${PORT:=37017}
-		mongorestore --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --drop ${BACKUP_DIR}/${RESTORE_FILENAME}
+		: ${PORT:=27017}
+		mongorestore --username=${USER} --password=${PASSWD} --host=${HOST} --port=${PORT} --authenticationDatabase=${DATABASE} --drop --archive=${BACKUP_DIR}/${RESTORE_FILENAME} --gzip
 		;;
 
 		###################################

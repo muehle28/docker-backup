@@ -54,10 +54,10 @@ case "${TYPE}" in
 	: ${PORT:=3306}
 	while !(mysqladmin --user ${USER} --password=${PASSWD} --host ${HOST} --port ${PORT} ping > /dev/null 2>&1)
 	do
-	   echo "Waiting for mysql ..."
+	   echo "Waiting for ${TYPE} ..."
 	   sleep 3
 	done
-	echo "Mysql server ready."
+	echo "Mysql server is ready."
 	tables=`mysql --user ${USER} --password=${PASSWD} --host ${HOST} --port ${PORT} -se "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = \"${DATABASE}\";"`
 	echo "Tables found: $tables"
 	if [ $tables -eq 0 ]; then
@@ -73,7 +73,21 @@ case "${TYPE}" in
     ###################################
 	"mongodb")
 	echo "Init ${TYPE} database ..."
-	: ${PORT:=37017}
+	: ${PORT:=27017}
+	set +e
+	while !(mongo --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --authenticationDatabase ${DATABASE} --authenticationMechanism SCRAM-SHA-1 --eval "db.stats()" ${DATABASE}) do
+    	echo "Waiting for ${TYPE} ..."
+		sleep 3
+	done;
+	set -e
+	echo "Mongodb server is ready."
+	tables=$(mongo --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --authenticationDatabase ${DATABASE} --authenticationMechanism SCRAM-SHA-1 --eval "db.stats()" ${DATABASE} | grep -Po '"collections"\s:\s\K[0-9]+')
+	if [ $tables -eq 0 ]; then
+		echo "${TYPE} Database is empty. Restoring latest backup."
+		set +e
+		/backup.sh restore latest
+		set -e
+	fi
 	;;
 
 	###################################
