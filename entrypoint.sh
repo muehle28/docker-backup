@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 set -e
 
 DATA_BACKUP_DIR=/databackup
@@ -7,41 +7,16 @@ BACKUP_DIR=/backups
 mkdir -p ${BACKUP_DIR}
 mkdir -p ${DATA_BACKUP_DIR}
 
-mkdir -p ${HOME}/.ssh
-cat << EOF > ${HOME}/.ssh/config
-Host *
-    StrictHostKeyChecking no
-EOF
-
-cat << EOF > /etc/cron.d/backup
-${CRON//\"/} root . /root/backup_env.sh; /backup.sh > /var/log/backup
+cat << EOF > /var/spool/cron/crontabs/backup
+${CRON//\"/} . /root/backup_env.sh; /backup.sh > /var/log/backup
 
 EOF
 
-chmod 0644 /etc/cron.d/backup
+chmod 0644 /var/spool/cron/crontabs/backup
+/usr/bin/crontab /var/spool/cron/crontabs/backup
 
 printenv | sed 's/^\(.*\)$/export \1/g' > /root/backup_env.sh
 chmod +x /root/backup_env.sh
-
-#Mount remote filesystem
-case "${REMOTE_TYPE}" in
-	###################################
-    ## Webdav
-    ###################################
-	"webdav")
-	echo "Mounting WebDAV: ${REMOTE_HOST}"
-	echo "${REMOTE_HOST} ${REMOTE_USER} ${REMOTE_PASSWD}">/etc/davfs2/secrets
-	mount -t davfs https://${REMOTE_HOST} ${BACKUP_DIR}
-	;;
-
-	###################################
-    ## SSHFS
-    ###################################
-	"sshfs")
-	echo "Mounting SSHFS: ${FTP_URL}"
-	echo ${REMOTE_PASSWD} | sshfs -o password_stdin -o reconnect -o ServerAliveInterval=15 ${REMOTE_USER}@${REMOTE_HOST}:/ ${BACKUP_DIR}
-	;;
-esac
 
 #Init database
 case "${TYPE}" in
@@ -81,7 +56,7 @@ case "${TYPE}" in
 	done;
 	set -e
 	echo "Mongodb server is ready."
-	tables=$(mongo --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --authenticationDatabase ${DATABASE} --authenticationMechanism SCRAM-SHA-1 --eval "db.stats()" ${DATABASE} | grep -Po '"collections"\s:\s\K[0-9]+')
+	tables=$(mongo --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --authenticationDatabase ${DATABASE} --eval "db.stats()" ${DATABASE} | grep -Po '"collections"\s:\s\K[0-9]+')
 	if [ $tables -eq 0 ]; then
 		echo "${TYPE} Database is empty. Restoring latest backup."
 		set +e

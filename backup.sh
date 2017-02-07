@@ -1,7 +1,7 @@
-#!/bin/bash
-: ${REMOTE_DIR:=backup}
-: ${REMOTE_GENERATIONS:=30}
-BACKUP_DIR=/backups/${REMOTE_DIR}/${TYPE}
+#!/bin/sh
+: ${DIRECTORY:=backup}
+: ${GENERATIONS:=30}
+BACKUP_DIR=/backups/${DIRECTORY}/${TYPE}
 BACKUP_FILENAME=`date +"%s"`
 #ATTENTION!! If you do a restore the content of this folder will be replaced.  
 DATA_BACKUP_DIR=/databackup
@@ -19,8 +19,8 @@ function getOldestBackupFilename(){
 
 function checkGenerations(){
 	echo "Checking for generations"
-	((count=`ls -l ${BACKUP_DIR} | grep -v ^d | wc -l` - 1))
-	if [ $count -gt ${REMOTE_GENERATIONS} ]; then
+	count=$((`ls -l ${BACKUP_DIR} | grep -v ^d | wc -l` - 1))
+	if [ $count -gt ${GENERATIONS} ]; then
 		filename=`getOldestBackupFilename`
 		
 		if [ ! -f ${BACKUP_DIR}/${filename} ]; then
@@ -32,7 +32,7 @@ function checkGenerations(){
 	fi
 }
 
-if [ $# -eq 0 ]; then
+if [ "$#" -eq 0 ]; then
 
 	echo "Staring ${TYPE} backup..."
 	case "${TYPE}" in
