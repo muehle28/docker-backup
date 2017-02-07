@@ -42,7 +42,7 @@ if [ $# -eq 0 ]; then
 	    ###################################
 	    "mysql")
 		: ${PORT:=3306}
-		mysqldump --user ${USER} --password=${PASSWD} --host ${HOST} --port ${PORT} --databases ${DATABASE} --single-transaction --routines --triggers > ${BACKUP_DIR}/${BACKUP_FILENAME}
+		mysqldump --user ${USER} --password=${PASSWD} --host ${HOST} --port ${PORT} --databases ${DATABASE} --add-drop-database --single-transaction --routines --triggers | gzip > ${BACKUP_DIR}/${BACKUP_FILENAME}
 		;;
 
 		###################################
@@ -87,7 +87,7 @@ else
 	    ###################################
 	    "mysql")
 		: ${PORT:=3306}
-		mysql --user ${USER} --password=${PASSWD} --host ${HOST} --port ${PORT} ${DATABASE} < ${BACKUP_DIR}/${RESTORE_FILENAME}
+		gunzip < ${BACKUP_DIR}/${RESTORE_FILENAME} | mysql --user ${USER} --password=${PASSWD} --host ${HOST} --port ${PORT} ${DATABASE}
 		;;
 
 		###################################
@@ -95,7 +95,7 @@ else
 	    ###################################
 		"mongodb")
 		: ${PORT:=37017}
-		mongorestore --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} ${BACKUP_DIR}/${RESTORE_FILENAME}
+		mongorestore --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --drop ${BACKUP_DIR}/${RESTORE_FILENAME}
 		;;
 
 		###################################
