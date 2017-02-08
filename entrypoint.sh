@@ -50,15 +50,16 @@ case "${TYPE}" in
 	echo "Init ${TYPE} database ..."
 	: ${PORT:=27017}
 	set +e
-	while !(mongo --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --authenticationDatabase ${DATABASE} --authenticationMechanism SCRAM-SHA-1 --eval "db.stats()" ${DATABASE}) do
+	while !(mongo --username=${USER} --password=${PASSWD} --host=${HOST} --port=${PORT} --authenticationDatabase=${DATABASE} --eval "db.stats()" ${DATABASE}) do
     	echo "Waiting for ${TYPE} ..."
 		sleep 3
 	done;
 	set -e
 	echo "Mongodb server is ready."
-	tables=$(mongo --username ${USER} --password ${PASSWD} --host ${HOST} --port ${PORT} --authenticationDatabase ${DATABASE} --eval "db.stats()" ${DATABASE} | grep -Po '"collections"\s:\s\K[0-9]+')
+	tables=$(echo $(mongo --username=${USER} --password=${PASSWD} --host=${HOST} --port=${PORT} --authenticationDatabase=${DATABASE} --eval "db.stats()" ${DATABASE}) | sed -e 's/[^{]* //' | jq -r '.collections')
 	if [ $tables -eq 0 ]; then
 		echo "${TYPE} Database is empty. Restoring latest backup."
+		sleep 3
 		set +e
 		/backup.sh restore latest
 		set -e
