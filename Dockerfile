@@ -17,7 +17,7 @@ ADD backup.sh /backup.sh
 RUN chmod +x /backup.sh
 
 RUN cp /usr/share/zoneinfo/Europe/Berlin /etc/localtime && \
-echo "Europe/Berlin" > /etc/timezone  --frontend noninteractive tzdata && \
+echo "Europe/Berlin" > /etc/timezone && \
 apk del tzdata
 
 WORKDIR /
