@@ -71,7 +71,7 @@ case "${TYPE}" in
     ###################################
 	"data")
 	echo "Init ${TYPE} directory ..."
-	if [ ! "$(ls -A /databackup)" ]; then
+	if [ ! "$(ls -A ${DATA_BACKUP_DIR})" ]; then
 		echo "${TYPE} directory is empty. Restoring latest backup."
 		set +e
 		/backup.sh restore latest
