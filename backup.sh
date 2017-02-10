@@ -4,7 +4,7 @@
 BACKUP_DIR=/backups/${DIRECTORY}/${TYPE}
 BACKUP_FILENAME=`date +"%s"`
 #ATTENTION!! If you do a restore the content of this folder will be replaced.  
-DATA_BACKUP_DIR=/databackup
+DATA_BACKUP_DIR=/data
 
 mkdir -p ${BACKUP_DIR}
 mkdir -p ${DATA_BACKUP_DIR}

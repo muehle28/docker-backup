@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-DATA_BACKUP_DIR=/databackup
+DATA_BACKUP_DIR=/data
 BACKUP_DIR=/backups
 
 mkdir -p ${BACKUP_DIR}
