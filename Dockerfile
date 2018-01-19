@@ -1,8 +1,7 @@
 FROM alpine:3.5
 MAINTAINER michael@websr.eu
 
-RUN \
-						
+RUN \						
 apk add --no-cache libressl2.5-libcrypto --repository http://dl-4.alpinelinux.org/alpine/edge/main && \
 apk add --no-cache libressl2.5-libssl --repository http://dl-4.alpinelinux.org/alpine/edge/main && \
 apk add --no-cache jq && \
