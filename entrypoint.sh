@@ -59,7 +59,7 @@ case "${TYPE}" in
 	tables=$(echo $(mongo --username=${USER} --password=${PASSWD} --host=${HOST} --port=${PORT} --authenticationDatabase=${DATABASE} --eval "db.stats()" ${DATABASE}) | sed -e 's/[^{]* //' | jq -r '.collections')
 	if [ $tables -eq 0 ]; then
 		echo "${TYPE} Database is empty. Restoring latest backup."
-		sleep 3
+		sleep 7
 		set +e
 		/backup.sh restore latest
 		set -e
